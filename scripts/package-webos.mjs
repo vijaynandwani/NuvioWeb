@@ -20,6 +20,14 @@ const appName = "Nuvio TV";
 const webOsServiceId = "space.nuvio.webos.service";
 const webOsServiceSourceDir = path.join(rootDir, "services", "webos");
 const webOsRuntimeScriptPath = "assets/libs/webOSTV.js";
+const webOsUserScriptSourcePath = path.join(
+  rootDir,
+  "js",
+  "platform",
+  "webos",
+  "trailerAdblockUserScript.js"
+);
+const webOsUserScriptRelativePath = path.join("webOSUserScripts", "userScript.js");
 
 async function assertDistExists() {
   try {
@@ -180,6 +188,10 @@ ${webOsScriptTag}  <script>
 async function stageApp() {
   const { version } = await readAppMetadata();
   await cp(distDir, appStageDir, { recursive: true });
+  await mkdir(path.dirname(path.join(appStageDir, webOsUserScriptRelativePath)), {
+    recursive: true
+  });
+  await cp(webOsUserScriptSourcePath, path.join(appStageDir, webOsUserScriptRelativePath));
 
   const appInfoPath = path.join(appStageDir, "appinfo.json");
   const appInfo = JSON.parse(await readFile(appInfoPath, "utf8"));

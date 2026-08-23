@@ -11,6 +11,14 @@ const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 const appName = "Nuvio TV";
 const webOsRuntimeScriptPath = "assets/libs/webOSTV.js";
+const webOsUserScriptSourcePath = path.join(
+  rootDir,
+  "js",
+  "platform",
+  "webos",
+  "trailerAdblockUserScript.js"
+);
+const webOsUserScriptRelativePath = path.join("webOSUserScripts", "userScript.js");
 const legacyWebOsServiceSourceDirName = "space.nuvio.webos.service";
 const webOsServiceSourceDirName = "webos";
 const webOsServiceId = "space.nuvio.webos.service";
@@ -376,6 +384,10 @@ async function updateWebOsMetadata(targetDir) {
 }
 
 async function syncWebOsCompanionFiles(targetDir) {
+  const webOsUserScriptTargetPath = path.join(targetDir, webOsUserScriptRelativePath);
+  await mkdir(path.dirname(webOsUserScriptTargetPath), { recursive: true });
+  await cp(webOsUserScriptSourcePath, webOsUserScriptTargetPath);
+
   await syncServiceFolder(targetDir, webOsServiceSourceDirName, {
     targetServiceDirName: webOsServiceDirName
   });
